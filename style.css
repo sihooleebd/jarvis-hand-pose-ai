@@ -56,6 +56,10 @@ div.helper > ul.gestures > li > div:last-child {
   text-align: center;
 }
 
+div.helper > ul.gestures > li.activated {
+  background: #fee;
+}
+
 div.helper > div.monitor {
   flex: 0 200px;
   background-color: #eee;
@@ -64,3 +68,4 @@ div.helper > div.monitor {
 #video-element {
   display: none;
 }
+

@@ -3,6 +3,10 @@
   <head>
     <title>J.A.R.V.I.S. ui</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-core"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-converter"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-webgl"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/handpose"></script>
     <script src="index.js" type="module"></script>
   </head>
   <body>
@@ -10,24 +14,24 @@
       <div class="helper">
         <ul class="gestures">
           <li>
-            <div>👍</div>
-            <div>10%</div>
+            <div>CREATE</div>
+            <div id="pose-create">10%</div>
           </li>
           <li>
-            <div>🖐</div>
-            <div>10%</div>
+            <div>EXPAND</div>
+            <div id="pose-expand">10%</div>
           </li>
           <li>
-            <div>✊</div>
-            <div>10%</div>
+            <div>SHRINK</div>
+            <div id="pose-shrink">10%</div>
           </li>
           <li>
-            <div>🫵</div>
-            <div>10%</div>
+            <div>POINT</div>
+            <div id="pose-point">10%</div>
           </li>
           <li>
-            <div>✌️</div>
-            <div>10%</div>
+            <div>DRAG</div>
+            <div id="pose-drag">10%</div>
           </li>
         </ul>
         <div class="monitor">
