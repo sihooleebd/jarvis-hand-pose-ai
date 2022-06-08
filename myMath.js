@@ -43,9 +43,9 @@ function normalize(handLandmarks) {
   const minZ = handLandmarks.map((p) => p[2]).minN();
   const maxZ = handLandmarks.map((p) => p[2]).maxN() - minZ;
   return handLandmarks.map((p) => [
-    (p[0] - minX) / maxX,
-    (p[1] - minY) / maxY,
-    (p[2] - minZ) / maxZ,
+    ((p[0] - minX) / maxX) * 10,
+    ((p[1] - minY) / maxY) * 10,
+    ((p[2] - minZ) / maxZ) * 10,
   ]);
 }
 

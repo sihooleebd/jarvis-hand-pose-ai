@@ -26,10 +26,23 @@ div.helper {
   align-items: stretch;
 }
 
-div.views {
+div#windows {
   border: 1px solid #00F;
   flex: 1 0px;
-  
+  position: relative;
+  overflow: hidden;
+}
+
+div#point {
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: #f00;
+  margin-top: -5px;
+  margin-left: -5px;
+  position: absolute;
+  z-index: 1000;
+  transition: left 50ms, top 50ms;
 }
 
 div.helper > ul.gestures {
@@ -69,3 +82,84 @@ div.helper > div.monitor {
   display: none;
 }
 
+div.window {
+  position: absolute;
+  width: 200px;
+  height: 133px;
+  box-sizing: border-box;
+  transition: left 100ms, top 100ms;
+}
+
+div#window-1 {
+  left: 100px;
+  top: 100px;
+  width: 300px;
+  height: 200px;
+  z-index: 1;
+}
+
+div#window-2 {
+  left: 300px;
+  top: 200px;
+  width: 300px;
+  height: 200px;
+  z-index: 2;
+}
+div#window-3 {
+  left: 150px;
+  top: 150px;
+  width: 200px;
+  height: 133px;
+  z-index: 2;
+}
+
+div.window.program-1 {
+  background:#fee;
+  border:1px solid #f00;
+}
+
+div.window.program-2 {
+  background:#eef;
+  border:1px solid #00f;
+}
+
+div.window.program-3 {
+  background:#efe;
+  border:1px solid #0f0;
+}
+
+div.window.program-4 {
+  background:#ffe;
+  border:1px solid #ff0;
+}
+
+div.window.program-2 {
+  background:#eff;
+  border:1px solid #0ff;
+}
+
+div.window.program-3 {
+  background:#fef;
+  border:1px solid #f0f;
+}
+
+
+.pointed {
+
+  animation: opacity 1s ease-in-out infinite;
+  opacity: 1;
+}
+
+@keyframes opacity {
+0% {
+  opacity: 1;
+}
+
+50% {
+  opacity: 0.5;
+}
+
+100% {
+  opacity: 1;
+}
+}
