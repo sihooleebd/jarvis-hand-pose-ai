@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 import poses from './newPoses.js';
-import { calculateCosineSimilarity, standardize, normalize } from './myMath.js';
+import { calculateCosineSimilarity, normalize } from './myMath.js';
 document.addEventListener('DOMContentLoaded', () => {
   new App();
 });
@@ -35,16 +35,11 @@ class App {
       solutionPath: `https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4`,
     };
 
-    const detectorConfigTfjs = {
-      runtime: 'tfjs',
-    };
-
     console.log('getDetector...');
     console.log('model', model);
     try {
       const detector = await handPoseDetection.createDetector(
         model,
-        // detectorConfigTfjs,
         detectorConfigMediapipe,
       );
       console.log('detector = ', detector);
@@ -90,11 +85,11 @@ class App {
   async detect(t) {
     this.hands = await this.detector.estimateHands(this.video);
     if (this.hands.length) {
-      //console.log('hand', this.hands[0]);
-    }
-    //console.log(this.hands);
-    if (this.hands.length) {
-      this.calculateSimilarity();
+      try {
+        this.calculateSimilarity();
+      } catch (e) {
+        //
+      }
     } else {
       this.onPoseDetected('none');
     }
@@ -141,10 +136,8 @@ class App {
       return;
     }
     this.hands.forEach((hand) => {
-      // console.log('hand', hand);
       if (!hand.keypoints) return;
       hand.keypoints.forEach((p) => {
-        // console.log('landmark', p[0], p[1]);
         ctx.beginPath();
         ctx.arc(this.vw - p.x, p.y, 5, 0, 2 * Math.PI);
         ctx.fill();
@@ -190,12 +183,10 @@ class App {
       const cos = calculateCosineSimilarity(hv, pv);
 
       let myPoseName = poseName;
-      // console.log('myPoseName before if', myPoseName);
       if (!isNaN(parseInt(poseName.charAt(poseName.length - 1)))) {
         myPoseName = myPoseName.substring(0, myPoseName.length - 1);
       }
       const cosToFixed = cos.toFixed(3);
-      // console.log('myposename', myPoseName);
       maxNumOfPose[myPoseName] = Math.max(maxNumOfPose[myPoseName], cosToFixed);
       if (cosToFixed > maxNum) {
         maxNum = cosToFixed;
@@ -242,12 +233,6 @@ class App {
         };
       }
     }
-    // console.log('pose position', posePosition);
-    // console.log('pose duration', Date.now() - this.poseStartTIme);
-    // console.log(
-    //   `dragged by ${posePosition[0] - this.poseStartPosition[0]} ${
-    //     posePosition[1] - this.poseStartPosition[0]
-    //   }`,
     if (poseName == 'point') {
       this.onPoint(posePosition);
     }
@@ -268,7 +253,6 @@ class App {
     }
     const dx = (posePosition[0] - this.poseStartPosition[0]) * 2;
     const dy = (posePosition[1] - this.poseStartPosition[1]) * 2;
-    // console.log('dx', dx, 'dy', dy);
     this.pointedWindowElement.style.left = `${
       this.initialPointedWindowPos.x + dx
     }px`;
@@ -285,8 +269,7 @@ class App {
     const top = this.pointedWindowElement.offsetTop;
     const width = this.pointedWindowElement.offsetWidth;
     const height = this.pointedWindowElement.offsetHeight;
-    console.log('left', left, 'top', top, 'width', width, 'height', height);
-    if (actionName == 'expand' && Math.max(width, height) > 500) {
+    if (actionName == 'expand' && Math.max(width, height) > 700) {
       return;
     }
     if (Math.min(width, height) < 100) {
@@ -305,8 +288,8 @@ class App {
     const windowsElement = document.querySelector('#windows');
     const width = windowsElement.offsetWidth;
     const height = windowsElement.offsetHeight;
-    const newWindowWidth = 200;
-    const newWindowHeight = 133;
+    const newWindowWidth = 300;
+    const newWindowHeight = 200;
 
     if (Date.now() - this.poseStartTime >= 1000) {
       const divClassNo = Math.floor(Math.random() * 6) + 1;
@@ -318,6 +301,8 @@ class App {
       newWindow.style.left = `${width / 2 - newWindowWidth / 2}px`;
       newWindow.style.top = `${height / 2 - newWindowHeight / 2}px`;
       newWindow.style.zIndex = 999;
+      newWindow.style.width = `${newWindowWidth}px`;
+      newWindow.style.height = `${newWindowHeight}px`;
       document.getElementById('windows').appendChild(newWindow);
       this.poseStartTime = Date.now();
       this.reassignZIndex();

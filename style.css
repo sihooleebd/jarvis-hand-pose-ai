@@ -10,7 +10,6 @@ div.container {
   height: 100%;
   margin:0;
   padding:0;
-  border: 1px solid #f00;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -18,16 +17,15 @@ div.container {
 }
 
 div.helper {
-  border: 1px solid #0F0;
   flex: 0 150px;
   overflow: hidden;
   display: flex;
   flex-direction: row;
   align-items: stretch;
+  background: #ddd;
 }
 
 div#windows {
-  border: 1px solid #00F;
   flex: 1 0px;
   position: relative;
   overflow: hidden;
@@ -51,12 +49,13 @@ div.helper > ul.gestures {
   flex-direction: row;
   align-items: stretch;
   list-style-type: none;
-  margin: 16px 0px;
+  margin: 10px 0px;
   padding: 0;
 }
 
 div.helper > ul.gestures > li {
   flex: 1 0px;
+  text-align: center;
 }
 
 div.helper > ul.gestures > li > div:first-child {
@@ -65,12 +64,21 @@ div.helper > ul.gestures > li > div:first-child {
 }
 
 div.helper > ul.gestures > li > div:last-child {
-  padding: 10px;
   text-align: center;
 }
 
 div.helper > ul.gestures > li.activated {
-  background: #fee;
+  background: #eee;
+}
+
+div.helper > ul.gestures > li > div {
+  height: 20px;
+  font-family: sans-serif;
+}
+
+div.helper > ul.gestures > li > img {
+  width: auto;
+  height:90px;
 }
 
 div.helper > div.monitor {
@@ -88,78 +96,43 @@ div.window {
   height: 133px;
   box-sizing: border-box;
   transition: left 100ms, top 100ms;
+  border: 1px solid #888;
+  border-radius: 8px;
+  background-size: contain;
 }
 
 div#window-1 {
   left: 100px;
   top: 100px;
-  width: 300px;
-  height: 200px;
+  width: 600px;
+  height: 400px;
   z-index: 1;
 }
-
-div#window-2 {
-  left: 300px;
-  top: 200px;
-  width: 300px;
-  height: 200px;
-  z-index: 2;
-}
-div#window-3 {
-  left: 150px;
-  top: 150px;
-  width: 200px;
-  height: 133px;
-  z-index: 2;
-}
-
 div.window.program-1 {
-  background:#fee;
-  border:1px solid #f00;
+  background-image: url(/images/programs/browser.png);
 }
 
 div.window.program-2 {
-  background:#eef;
-  border:1px solid #00f;
+  background-image: url(/images/programs/chat.png);
 }
 
 div.window.program-3 {
-  background:#efe;
-  border:1px solid #0f0;
+  background-image: url(/images/programs/finder.png);
 }
 
 div.window.program-4 {
-  background:#ffe;
-  border:1px solid #ff0;
+  background-image: url(/images/programs/music.png);
 }
 
-div.window.program-2 {
-  background:#eff;
-  border:1px solid #0ff;
+div.window.program-5 {
+  background-image: url(/images/programs/vscode.png);
 }
 
-div.window.program-3 {
-  background:#fef;
-  border:1px solid #f0f;
+div.window.program-6 {
+  background-image: url(/images/programs/youtube.png);
 }
 
 
-.pointed {
-
-  animation: opacity 1s ease-in-out infinite;
-  opacity: 1;
-}
-
-@keyframes opacity {
-0% {
-  opacity: 1;
-}
-
-50% {
-  opacity: 0.5;
-}
-
-100% {
-  opacity: 1;
-}
+div.window.pointed {
+  border: 2px solid #f00;
 }

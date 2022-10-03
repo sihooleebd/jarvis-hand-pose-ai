@@ -47,6 +47,10 @@ function normalize(handLandmarks) {
     ((p[1] - minY) / maxY) * 10,
     ((p[2] - minZ) / maxZ) * 10,
   ]);
+
+  //                  x' = x-(x의 최소값)/(x의 최대값-x의 최소값)
+  //                  y' = y-(y의 최소값)/(y의 최대값-y의 최소값)
+  //                  z' = z-(z의 최소값)/(z의 최대값-z의 최소값)
 }
 
 export { calculateCosineSimilarity, standardize, normalize };
