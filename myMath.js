@@ -37,20 +37,19 @@ function normalize(handLandmarks) {
     return null;
   }
   const minX = handLandmarks.map((p) => p[0]).minN();
-  const maxX = handLandmarks.map((p) => p[0]).maxN() - minX;
+  const maxX = handLandmarks.map((p) => p[0]).maxN();
   const minY = handLandmarks.map((p) => p[1]).minN();
-  const maxY = handLandmarks.map((p) => p[1]).maxN() - minY;
+  const maxY = handLandmarks.map((p) => p[1]).maxN();
   const minZ = handLandmarks.map((p) => p[2]).minN();
-  const maxZ = handLandmarks.map((p) => p[2]).maxN() - minZ;
+  const maxZ = handLandmarks.map((p) => p[2]).maxN();
   return handLandmarks.map((p) => [
-    ((p[0] - minX) / maxX) * 10,
-    ((p[1] - minY) / maxY) * 10,
-    ((p[2] - minZ) / maxZ) * 10,
+    ((p[0] - minX) / (maxX - minX)) * 10,
+    ((p[1] - minY) / (maxY - minY)) * 10,
+    ((p[2] - minZ) / (maxZ - minZ)) * 10,
   ]);
-
-  //                  x' = x-(x의 최소값)/(x의 최대값-x의 최소값)
-  //                  y' = y-(y의 최소값)/(y의 최대값-y의 최소값)
-  //                  z' = z-(z의 최소값)/(z의 최대값-z의 최소값)
+  // x' = x-(x의 최소값)/(x의 최대값-x의 최소값)
+  // y' = y-(y의 최소값)/(y의 최대값-y의 최소값)
+  // z' = z-(z의 최소값)/(z의 최대값-z의 최소값)
 }
 
 export { calculateCosineSimilarity, standardize, normalize };

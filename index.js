@@ -12,9 +12,12 @@ class App {
     this.poseStartTIme = undefined;
     this.poseStartPosition = undefined;
     this.currentPoseName = 'none';
-    this.maxWindowId = 3;
+    this.maxWindowNumber = 3;
     this.pointedWindowElement = null;
     this.init();
+
+    this.maxZIndex = 10;
+    this.windowIdAndZIndexMap = new Map();
   }
   async init() {
     await this.getVideoStream();
@@ -83,7 +86,9 @@ class App {
     this.detect(Date.now());
   }
   async detect(t) {
-    this.hands = await this.detector.estimateHands(this.video);
+    const tempHands = await this.detector.estimateHands(this.video);
+    this.hands = tempHands.filter((hand) => hand.handedness === 'Left'); // 반전된 동영상이므로 오른손을 의미
+
     if (this.hands.length) {
       try {
         this.calculateSimilarity();
@@ -108,6 +113,7 @@ class App {
     this.drawHands(ctx);
     window.requestAnimationFrame(this.captureFrame);
   };
+
   drawHands(ctx) {
     const connections = [
       [0, 1],
@@ -163,6 +169,7 @@ class App {
   calculateSimilarity() {
     const poseNames = Object.keys(poses);
     const hand = this.hands[0];
+    console.log('hand', hand);
     const hv = normalize(
       hand.keypoints3D.map((keypoint) => [keypoint.x, keypoint.y, keypoint.z]),
     ).flat();
@@ -293,34 +300,37 @@ class App {
 
     if (Date.now() - this.poseStartTime >= 1000) {
       const divClassNo = Math.floor(Math.random() * 6) + 1;
-      this.maxWindowId++;
+      this.maxWindowNumber++;
+      this.maxZIndex++;
+      const newWindowId = `window-${this.maxWindowNumber}`;
       const newWindow = document.createElement('div');
-      newWindow.setAttribute('id', `window-${this.maxWindowId}`);
+      newWindow.setAttribute('id', newWindowId);
       newWindow.classList.add('window');
       newWindow.classList.add(`program-${divClassNo}`);
       newWindow.style.left = `${width / 2 - newWindowWidth / 2}px`;
       newWindow.style.top = `${height / 2 - newWindowHeight / 2}px`;
-      newWindow.style.zIndex = 999;
+      newWindow.style.zIndex = this.maxZIndex;
       newWindow.style.width = `${newWindowWidth}px`;
       newWindow.style.height = `${newWindowHeight}px`;
       document.getElementById('windows').appendChild(newWindow);
+      this.windowIdAndZIndexMap.set(newWindowId, this.maxZIndex);
       this.poseStartTime = Date.now();
-      this.reassignZIndex();
+      // this.reassignZIndex();
       this.setPointedWindow(newWindow);
     }
   }
 
-  reassignZIndex() {
-    Array.from(document.querySelectorAll('.window'))
-      .sort((w1, w2) =>
-        window.getComputedStyle(w1).zIndex > window.getComputedStyle(w2).zIndex
-          ? 1
-          : -1,
-      )
-      .forEach((w, i) => {
-        w.style.zIndex = i + 1;
-      });
-  }
+  // reassignZIndex() {
+  //   Array.from(document.querySelectorAll('.window'))
+  //     .sort((w1, w2) =>
+  //       window.getComputedStyle(w1).zIndex > window.getComputedStyle(w2).zIndex
+  //         ? 1
+  //         : -1,
+  //     )
+  //     .forEach((w, i) => {
+  //       w.style.zIndex = i + 1;
+  //     });
+  // }
   onPoint(posePosition) {
     const pointElement = document.querySelector('#point');
     const windowsElement = document.querySelector('#windows');
@@ -344,17 +354,32 @@ class App {
           pointY >= window.offsetTop &&
           pointY <= window.offsetTop + window.offsetHeight,
       )
-      .sort((w1, w2) =>
-        window.getComputedStyle(w1).zIndex < window.getComputedStyle(w2).zIndex
-          ? 1
-          : -1,
-      );
-    const pointedWindow =
-      pointedWindows.length > 0 ? pointedWindows[0] : undefined;
-    if (pointedWindow) {
-      pointedWindow.style.zIndex = 999;
-      this.reassignZIndex();
-      this.setPointedWindow(pointedWindow);
+      .sort((w1, w2) => {
+        const z1 = this.windowIdAndZIndexMap.get(w1.id);
+        const z2 = this.windowIdAndZIndexMap.get(w2.id);
+        if (!z1 || !z2) return 0;
+        return z1 < z2 ? 1 : -1;
+      });
+
+    console.log('pointedWindows', pointedWindows);
+
+    if (pointedWindows.length > 0) {
+      const pointedWindow = pointedWindows[0];
+      // z-index 재설정
+      if (this.pointedWindowElement === pointedWindow) {
+        // z-index 재설정 필요 없음
+        console.log(
+          'zIndex 재설정 불필요',
+          pointedWindow.id,
+          this.windowIdAndZIndexMap.get(pointedWindow.id),
+        );
+      } else {
+        this.maxZIndex++;
+        console.log('zIndex 재설정됨', pointedWindow.id, this.maxZIndex);
+        pointedWindow.style.zIndex = this.maxZIndex;
+        this.windowIdAndZIndexMap.set(pointedWindow.id, this.maxZIndex);
+        this.setPointedWindow(pointedWindow);
+      }
     } else {
       this.setPointedWindow(null);
     }

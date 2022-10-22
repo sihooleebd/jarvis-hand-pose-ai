@@ -3,4 +3,5 @@
   "editor.formatOnSave": true,
   "eslint.format.enable": true,
   "javascript.format.enable": false,
+  "liveServer.settings.port": 5502,
 }
